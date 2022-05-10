@@ -14,4 +14,10 @@ public class BoardRestController {
         return ResponseEntity.ok("Hello world!");
     }
 
+    @GetMapping("/one")
+    public ResponseEntity findBoardOne() {
+        return ResponseEntity.ok("Hello board!");
+    }
+
+
 }
