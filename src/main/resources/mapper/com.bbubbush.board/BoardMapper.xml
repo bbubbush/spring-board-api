@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bbubbush.board.mapper.BoardMapper">
+    <select id="findArticle" resultType="ArticleDto">
+        SELECT B.ARTICLE_ID
+             , B.SUBJECT
+             , B.TEXT
+             , B.WRITER
+             , BT.TAG_NAME AS TAG
+             , B.CREATED_DATE
+             , B.CREATED_DATE
+          FROM BOARD B
+    LEFT OUTER JOIN BOARD_TAG BT
+            ON B.ARTICLE_ID = BT.ARTICLE_ID
+         WHERE 1=1
+           AND ARTICLE_ID = #{articleId}
+    </select>
+
+    <select id="findArticles" resultType="ArticleDto">
+        SELECT B.ARTICLE_ID
+             , B.SUBJECT
+             , B.TEXT
+             , B.WRITER
+             , BT.TAG_NAME AS TAG
+             , B.CREATED_DATE
+             , B.CREATED_DATE
+          FROM BOARD B
+    LEFT OUTER JOIN BOARD_TAG BT
+            ON B.ARTICLE_ID = BT.ARTICLE_ID
+    </select>
+
+    <select id="findArticleTags" resultType="List">
+        SELECT BT.TAG
+          FROM BOARD_TAG BT
+         WHERE 1=1
+           AND BT.ARTICLE_ID = #{articleId}
+    </select>
+
+
+</mapper>
