@@ -55,7 +55,7 @@
     INSERT INTO notice_board_tag (
       article_id
       , name
-      , "creator"
+      , creator
       , modifier
     ) VALUES
     <foreach collection="tags" item="tag" separator=",">

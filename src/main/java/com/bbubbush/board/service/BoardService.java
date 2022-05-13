@@ -20,16 +20,15 @@ public class BoardService {
   @Transactional(readOnly = true)
   public ResSearchArticle findArticle(Long articleId) {
     final ResSearchArticle findArticle = boardMapper.findArticle(articleId);
-    final List<String> articleTags = boardMapper.findArticleTags(findArticle.getArticleId());
-    findArticle.setTag(articleTags);
-    return findArticle;
+    return findArticleTagById(findArticle);
   }
 
   @Transactional(readOnly = true)
   public List<ResSearchArticle> findArticles() {
-    final List<ResSearchArticle> articles = boardMapper.findArticles();
-    articles.forEach(article -> article.setTag(boardMapper.findArticleTags(article.getArticleId())));
-    return articles;
+    return boardMapper.findArticles()
+      .stream()
+      .map(this::findArticleTagById)
+      .toList();
   }
 
   public int insertArticle(ReqInsertArticle reqInsertArticle) {
@@ -51,8 +50,14 @@ public class BoardService {
     return boardMapper.deleteArticle(articleId);
   }
 
-  private int deleteArticleTags(Long articleId) {
-    return boardMapper.deleteArticleTags(articleId);
+  private ResSearchArticle findArticleTagById(ResSearchArticle findArticle) {
+    final List<String> articleTags = boardMapper.findArticleTags(findArticle.getArticleId());
+    findArticle.setTag(articleTags);
+    return findArticle;
+  }
+
+  private void deleteArticleTags(Long articleId) {
+    boardMapper.deleteArticleTags(articleId);
   }
 
 }
