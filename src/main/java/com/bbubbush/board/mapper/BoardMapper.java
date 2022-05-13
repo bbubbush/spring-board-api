@@ -1,9 +1,8 @@
 package com.bbubbush.board.mapper;
 
-import com.bbubbush.board.dto.ArticleDto;
-import com.bbubbush.board.dto.ArticleTagDto;
-import com.bbubbush.board.vo.req.ReqInsertArticle;
-import com.bbubbush.board.vo.req.ReqUpdateArticle;
+import com.bbubbush.board.dto.res.ResSearchArticle;
+import com.bbubbush.board.dto.req.ReqInsertArticle;
+import com.bbubbush.board.dto.req.ReqUpdateArticle;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -11,9 +10,9 @@ import java.util.List;
 @Mapper
 public interface BoardMapper {
 
-  ArticleDto findArticle(Long articleId);
+  ResSearchArticle findArticle(Long articleId);
 
-  List<ArticleDto> findArticles();
+  List<ResSearchArticle> findArticles();
 
   int insertArticle(ReqInsertArticle reqInsertArticle);
 
@@ -23,4 +22,7 @@ public interface BoardMapper {
 
   List<String> findArticleTags(Long articleId);
 
+  int insertArticleTags(ReqInsertArticle reqInsertArticle);
+
+  int deleteArticleTags(Long articleId);
 }

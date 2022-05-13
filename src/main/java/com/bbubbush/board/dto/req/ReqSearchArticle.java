@@ -1,18 +1,15 @@
-package com.bbubbush.board.dto;
+package com.bbubbush.board.dto.req;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArticleTagDto {
+public class ReqSearchArticle {
 
-  private Long articleId;
-  private String tag;
+  private long id;
 
 }

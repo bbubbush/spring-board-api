@@ -1,49 +1,58 @@
 package com.bbubbush.board.service;
 
-import com.bbubbush.board.dto.ArticleDto;
+import com.bbubbush.board.dto.req.ReqInsertArticle;
+import com.bbubbush.board.dto.req.ReqUpdateArticle;
+import com.bbubbush.board.dto.res.ResSearchArticle;
 import com.bbubbush.board.mapper.BoardMapper;
-import com.bbubbush.board.vo.req.ReqInsertArticle;
-import com.bbubbush.board.vo.req.ReqUpdateArticle;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BoardService {
 
   private final BoardMapper boardMapper;
 
-  public ArticleDto findArticle(Long articleId) {
-    final ArticleDto findArticle = boardMapper.findArticle(articleId);
+  @Transactional(readOnly = true)
+  public ResSearchArticle findArticle(Long articleId) {
+    final ResSearchArticle findArticle = boardMapper.findArticle(articleId);
     final List<String> articleTags = boardMapper.findArticleTags(findArticle.getArticleId());
     findArticle.setTag(articleTags);
     return findArticle;
   }
 
-  public List<ArticleDto> findArticles() {
-    final List<ArticleDto> articles = boardMapper.findArticles();
-    articles.forEach(article -> {
-        final List<String> tags = boardMapper.findArticleTags(article.getArticleId());
-        article.setTag(tags);
-      });
+  @Transactional(readOnly = true)
+  public List<ResSearchArticle> findArticles() {
+    final List<ResSearchArticle> articles = boardMapper.findArticles();
+    articles.forEach(article -> article.setTag(boardMapper.findArticleTags(article.getArticleId())));
     return articles;
   }
 
   public int insertArticle(ReqInsertArticle reqInsertArticle) {
-    // TODO 개발중
-    return boardMapper.insertArticle(reqInsertArticle);
+    final int insertRows = boardMapper.insertArticle(reqInsertArticle);
+    boardMapper.insertArticleTags(reqInsertArticle);
+    return insertRows;
   }
 
   public int updateArticle(ReqUpdateArticle reqUpdateArticle) {
-    // TODO 개발중
-    return boardMapper.updateArticle(reqUpdateArticle);
+    reqUpdateArticle.setUpdateArticleId();
+    deleteArticleTags(reqUpdateArticle.getId());
+    final int updateRows = boardMapper.updateArticle(reqUpdateArticle);
+    boardMapper.insertArticleTags(reqUpdateArticle);
+    return updateRows;
   }
 
   public int deleteArticle(Long articleId) {
-    // TODO 개발중
+    deleteArticleTags(articleId);
     return boardMapper.deleteArticle(articleId);
+  }
+
+  private int deleteArticleTags(Long articleId) {
+    return boardMapper.deleteArticleTags(articleId);
   }
 
 }

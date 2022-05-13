@@ -3,40 +3,87 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.bbubbush.board.mapper.BoardMapper">
-    <select id="findArticle" resultType="ArticleDto">
-        SELECT B.ARTICLE_ID
-             , B.SUBJECT
-             , B.TEXT
-             , B.WRITER
-             , BT.TAG_NAME AS TAG
-             , B.CREATED_DATE
-             , B.CREATED_DATE
-          FROM BOARD B
-    LEFT OUTER JOIN BOARD_TAG BT
-            ON B.ARTICLE_ID = BT.ARTICLE_ID
-         WHERE 1=1
-           AND ARTICLE_ID = #{articleId}
-    </select>
 
-    <select id="findArticles" resultType="ArticleDto">
-        SELECT B.ARTICLE_ID
-             , B.SUBJECT
-             , B.TEXT
-             , B.WRITER
-             , BT.TAG_NAME AS TAG
-             , B.CREATED_DATE
-             , B.CREATED_DATE
-          FROM BOARD B
-    LEFT OUTER JOIN BOARD_TAG BT
-            ON B.ARTICLE_ID = BT.ARTICLE_ID
-    </select>
+  <select id="findArticle" resultType="ResSearchArticle">
+    SELECT B.article_id
+         , B.subject
+         , B.text
+         , B.creator AS writer
+         , B.created_date
+         , B.last_modified_date
+      FROM notice_board B
+     WHERE 1=1
+       AND ARTICLE_ID = #{articleId}
+  </select>
 
-    <select id="findArticleTags" resultType="List">
-        SELECT BT.TAG
-          FROM BOARD_TAG BT
-         WHERE 1=1
-           AND BT.ARTICLE_ID = #{articleId}
-    </select>
+  <select id="findArticles" resultType="ResSearchArticle">
+    SELECT B.article_id
+         , B.subject
+         , B.text
+         , B.creator AS writer
+         , B.created_date
+         , B.last_modified_date
+      FROM notice_board B
+  </select>
+
+  <select id="findArticleTags" resultType="String">
+    SELECT BT.name
+      FROM notice_board_tag BT
+     WHERE 1=1
+       AND BT.ARTICLE_ID = #{articleId}
+  </select>
+
+  <insert id="insertArticle">
+    <selectKey keyProperty="targetArticleId" resultType="long" order="AFTER">
+        SELECT LAST_INSERT_ID()
+    </selectKey>
+
+    INSERT INTO notice_board (
+      subject
+      , text
+      , creator
+      , modifier
+    ) VALUES (
+      #{subject}
+      , #{text}
+      , #{writer}
+      , #{writer}
+    )
+  </insert>
+
+  <insert id="insertArticleTags">
+    INSERT INTO notice_board_tag (
+      article_id
+      , name
+      , "creator"
+      , modifier
+    ) VALUES
+    <foreach collection="tags" item="tag" separator=",">
+    (   #{targetArticleId}
+        , #{tag}
+        , #{writer}
+        , #{writer}
+    )
+    </foreach>
+  </insert>
+
+  <update id="updateArticle">
+    UPDATE notice_board
+       SET last_modified_date = NOW()
+         , subject = #{subject}
+         , text = #{text}
+     WHERE article_id = #{id}
+  </update>
+
+  <delete id="deleteArticle">
+    DELETE FROM notice_board
+     WHERE article_id = #{article_id}
+  </delete>
+
+  <delete id="deleteArticleTags">
+    DELETE FROM notice_board_tag
+     WHERE article_id = #{article_id}
+  </delete>
 
 
 </mapper>

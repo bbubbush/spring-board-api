@@ -1,4 +1,4 @@
-package com.bbubbush.board.dto;
+package com.bbubbush.board.dto.res;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import java.util.List;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArticleDto {
+public class ResSearchArticle {
 
   private Long articleId;
   private String subject;
@@ -20,6 +20,6 @@ public class ArticleDto {
   private String writer;
   private List<String> tag = new ArrayList<>();
   private LocalDateTime createdDate;
-  private LocalDateTime modifiedDate;
+  private LocalDateTime lastModifiedDate;
 
 }
