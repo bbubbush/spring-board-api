@@ -23,20 +23,21 @@ class BoardMapperTest {
   @Autowired
   private BoardMapper boardMapper;
 
+  private final Long EXPECTED_ID = 1L;
+
   @Test
   @DisplayName("게시글 조회")
   void findArticle() {
     // given
-    final Long expectedId = 33L;
 
     // when
-    final ResSearchArticle findArticle = boardMapper.findArticle(expectedId);
+    final ResSearchArticle findArticle = boardMapper.findArticle(EXPECTED_ID);
 
     // then
     assertThat(findArticle).isNotNull();
     assertThat(findArticle.getArticleId())
       .isNotNull()
-      .isEqualTo(expectedId);
+      .isEqualTo(EXPECTED_ID);
     assertThat(findArticle.getSubject())
       .isNotNull()
       .hasSizeGreaterThan(0)
@@ -107,11 +108,10 @@ class BoardMapperTest {
   @DisplayName("게시글삭제_성공")
   void deleteArticle() {
     // given
-    final Long expectedId = 33L;
-    boardMapper.deleteArticleTags(expectedId);
+    boardMapper.deleteArticleTags(EXPECTED_ID);
 
     // when
-    final int deleteRows = boardMapper.deleteArticle(expectedId);
+    final int deleteRows = boardMapper.deleteArticle(EXPECTED_ID);
 
     // then
     assertThat(deleteRows).isEqualTo(1);
@@ -121,11 +121,10 @@ class BoardMapperTest {
   @DisplayName("태그목록조회")
   void findArticleTags() {
     // given
-    final Long expectedId = 33L;
     final List<String> expectedTagNames = createReqTags();
 
     // when
-    final List<String> findTags = boardMapper.findArticleTags(expectedId);
+    final List<String> findTags = boardMapper.findArticleTags(EXPECTED_ID);
 
     // then
     assertThat(findTags)
@@ -151,10 +150,9 @@ class BoardMapperTest {
   @DisplayName("게시글 연관 태그 삭제")
   void deleteArticleTags() {
     // given
-    final Long expectedId = 33L;
 
     // when
-    final int deleteRows = boardMapper.deleteArticleTags(expectedId);
+    final int deleteRows = boardMapper.deleteArticleTags(EXPECTED_ID);
 
     // then
     assertThat(deleteRows).isEqualTo(3);
@@ -171,7 +169,7 @@ class BoardMapperTest {
   private ReqInsertArticle createReqInsertArticle() {
     return ReqInsertArticle
       .builder()
-      .targetArticleId(33L)
+      .targetArticleId(EXPECTED_ID)
       .subject("Hello Spring")
       .text("자바는 자바자바해")
       .writer("뿌뿌쉬")
@@ -182,8 +180,8 @@ class BoardMapperTest {
   private ReqUpdateArticle createReqUpdateArticle() {
     return ReqUpdateArticle
       .builder()
-      .id(33L)
-      .targetArticleId(33L)
+      .id(EXPECTED_ID)
+      .targetArticleId(EXPECTED_ID)
       .subject("자바는 자바자바해")
       .text("자바는 자바자바해")
       .writer("뿌뿌쉬")
