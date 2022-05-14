@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReqModifyArticle {
+public class ReqDeleteArticle {
 
   private long id;
 

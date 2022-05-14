@@ -1,7 +1,7 @@
 version: "3"
 services:
   board:
-    image: "mysql:latest"
+    image: "bbubbush/simple-board-db:latest"
     container_name: "local-board-db"
     ports:
       - "3306:3306"

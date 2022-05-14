@@ -1,6 +1,6 @@
 package com.bbubbush.board.api;
 
-import com.bbubbush.board.dto.req.ReqModifyArticle;
+import com.bbubbush.board.dto.req.ReqDeleteArticle;
 import com.bbubbush.board.dto.req.ReqSearchArticle;
 import com.bbubbush.board.dto.res.ResSearchArticle;
 import com.bbubbush.board.service.BoardService;
@@ -53,7 +53,7 @@ public class BoardRestController {
   }
 
   @DeleteMapping("/delete")
-  public ResponseEntity<ResponseVO<Integer>> deleteArticle(@RequestBody ReqModifyArticle reqModifyArticle) {
+  public ResponseEntity<ResponseVO<Integer>> deleteArticle(@RequestBody ReqDeleteArticle reqModifyArticle) {
     ResponseVO<Integer> responseVO = new ResponseVO<>();
     responseVO.setErrorCode(200);
     responseVO.setData(boardService.deleteArticle(reqModifyArticle.getId()));
