@@ -1,5 +1,6 @@
 package com.bbubbush.board.dto.res;
 
+import com.bbubbush.board.util.MaskingUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,4 +25,7 @@ public class ResSearchArticle {
   private LocalDateTime createdDate;
   private LocalDateTime lastModifiedDate;
 
+  public void setWriter(String writer) {
+    this.writer = MaskingUtil.maskUserName(writer);
+  }
 }
