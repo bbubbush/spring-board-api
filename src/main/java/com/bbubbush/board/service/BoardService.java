@@ -1,5 +1,6 @@
 package com.bbubbush.board.service;
 
+import com.bbubbush.board.dto.common.ReqSendMail;
 import com.bbubbush.board.dto.req.ReqInsertArticle;
 import com.bbubbush.board.dto.req.ReqUpdateArticle;
 import com.bbubbush.board.dto.res.ResSearchArticle;
@@ -16,6 +17,7 @@ import java.util.List;
 public class BoardService {
 
   private final BoardMapper boardMapper;
+  private final MailService mailService;
 
   @Transactional(readOnly = true)
   public ResSearchArticle findArticle(Long articleId) {
@@ -47,7 +49,10 @@ public class BoardService {
 
   public int deleteArticle(Long articleId) {
     deleteArticleTags(articleId);
-    return boardMapper.deleteArticle(articleId);
+    final int deleteRows = boardMapper.deleteArticle(articleId);
+    final ReqSendMail reqSendMail = ReqSendMail.createDeleteArticleDto(articleId);
+    mailService.sendMail(reqSendMail);
+    return deleteRows;
   }
 
   private ResSearchArticle findArticleTagById(ResSearchArticle findArticle) {
