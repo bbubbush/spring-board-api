@@ -48,9 +48,12 @@ public class BoardService {
   }
 
   public int deleteArticle(Long articleId) {
+    final ResSearchArticle findArticle = findArticle(articleId);
+
     deleteArticleTags(articleId);
     final int deleteRows = boardMapper.deleteArticle(articleId);
-    final ReqSendMail reqSendMail = ReqSendMail.createDeleteArticleDto(articleId);
+
+    final ReqSendMail reqSendMail = ReqSendMail.createDeleteArticleDto(findArticle.getSubject());
     mailService.sendMail(reqSendMail);
     return deleteRows;
   }
