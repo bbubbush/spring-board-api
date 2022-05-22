@@ -5,32 +5,32 @@
 <mapper namespace="com.bbubbush.board.mapper.BoardMapper">
 
   <select id="findArticle" resultType="ResSearchArticle">
-    SELECT B.article_id
-         , B.subject
-         , B.text
-         , B.creator AS writer
-         , B.created_date
-         , B.last_modified_date
-      FROM notice_board B
+    SELECT board.article_id
+         , board.subject
+         , board.text
+         , board.creator AS writer
+         , board.created_date
+         , board.last_modified_date
+      FROM notice_board board
      WHERE 1=1
-       AND ARTICLE_ID = #{articleId}
+       AND board.article_id = #{articleId}
   </select>
 
   <select id="findArticles" resultType="ResSearchArticle">
-    SELECT B.article_id
-         , B.subject
-         , B.text
-         , B.creator AS writer
-         , B.created_date
-         , B.last_modified_date
-      FROM notice_board B
+    SELECT board.article_id
+         , board.subject
+         , board.text
+         , board.creator AS writer
+         , board.created_date
+         , board.last_modified_date
+      FROM notice_board board
   </select>
 
   <select id="findArticleTags" resultType="String">
-    SELECT BT.name
-      FROM notice_board_tag BT
+    SELECT tag.name
+      FROM notice_board_tag tag
      WHERE 1=1
-       AND BT.ARTICLE_ID = #{articleId}
+       AND tag.article_id = #{articleId}
   </select>
 
   <insert id="insertArticle">
