@@ -41,4 +41,5 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
   public BufferedReader getReader() {
     return new BufferedReader(new InputStreamReader(this.getInputStream()));
   }
+
 }

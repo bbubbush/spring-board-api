@@ -6,6 +6,7 @@ import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 
 public class StringInputStream extends ServletInputStream {
+
   private final ByteArrayInputStream bis;
 
   public StringInputStream(String requestContent) {
