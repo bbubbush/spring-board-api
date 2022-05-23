@@ -13,22 +13,22 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ApiExceptionHandler {
 
   @ExceptionHandler(ArticleNotFoundException.class)
-  public <T> ResponseVO articleNotFoundExceptionHandler(ArticleNotFoundException e) {
+  public ResponseVO articleNotFoundExceptionHandler(ArticleNotFoundException e) {
     return ApiResponse.error(ApiResponseType.ARTICLE_NOT_FOUND.getCode(), e.getMessage());
   }
 
   @ExceptionHandler(NotModifiedDataException.class)
-  public <T> ResponseVO notModifiedDataExceptionHandler(NotModifiedDataException e) {
+  public ResponseVO notModifiedDataExceptionHandler(NotModifiedDataException e) {
     return ApiResponse.error(ApiResponseType.NOT_MODIFIED_DATA.getCode(), e.getMessage());
   }
 
   @ExceptionHandler(CommonApiException.class)
-  public <T> ResponseVO commonApiExceptionHandler(CommonApiException e) {
+  public ResponseVO commonApiExceptionHandler(CommonApiException e) {
     return ApiResponse.error(ApiResponseType.SERVER_ERROR.getCode(), e.getMessage());
   }
 
   @ExceptionHandler(Exception.class)
-  public <T> ResponseVO exceptionHandler() {
+  public ResponseVO exceptionHandler() {
     return ApiResponse.error(ApiResponseType.SERVER_ERROR);
   }
 
