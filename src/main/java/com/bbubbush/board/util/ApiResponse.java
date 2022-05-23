@@ -9,11 +9,11 @@ public class ApiResponse<T> extends ResponseVO<T> {
     return ResponseVO.createSuccessVO(data);
   }
 
-  public static <T> ResponseVO error(ApiResponseType responseType) {
+  public static ResponseVO error(ApiResponseType responseType) {
     return ResponseVO.createErrorVO(responseType);
   }
 
-  public static <T> ResponseVO error(int errorCode, String errorMessage) {
+  public static ResponseVO error(int errorCode, String errorMessage) {
     return ResponseVO.of(errorCode, errorMessage);
   }
 
