@@ -4,6 +4,8 @@ import com.bbubbush.board.dto.common.ReqSendMail;
 import com.bbubbush.board.dto.req.ReqInsertArticle;
 import com.bbubbush.board.dto.req.ReqUpdateArticle;
 import com.bbubbush.board.dto.res.ResSearchArticle;
+import com.bbubbush.board.exception.ArticleNotFoundException;
+import com.bbubbush.board.exception.NotModifiedDataException;
 import com.bbubbush.board.mapper.BoardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,10 @@ public class BoardService {
   @Transactional(readOnly = true)
   public ResSearchArticle findArticle(Long articleId) {
     final ResSearchArticle findArticle = boardMapper.findArticle(articleId);
+    if (findArticle == null) {
+      throw new ArticleNotFoundException();
+    }
+
     return findArticleTagById(findArticle);
   }
 
@@ -35,6 +41,10 @@ public class BoardService {
 
   public int insertArticle(ReqInsertArticle reqInsertArticle) {
     final int insertRows = boardMapper.insertArticle(reqInsertArticle);
+    if (insertRows == 0) {
+      throw new NotModifiedDataException();
+    }
+
     boardMapper.insertArticleTags(reqInsertArticle);
     return insertRows;
   }
@@ -42,16 +52,24 @@ public class BoardService {
   public int updateArticle(ReqUpdateArticle reqUpdateArticle) {
     reqUpdateArticle.setUpdateArticleId();
     deleteArticleTags(reqUpdateArticle.getId());
+
     final int updateRows = boardMapper.updateArticle(reqUpdateArticle);
+    if (updateRows == 0) {
+      throw new NotModifiedDataException();
+    }
+
     boardMapper.insertArticleTags(reqUpdateArticle);
     return updateRows;
   }
 
   public int deleteArticle(Long articleId) {
     final ResSearchArticle findArticle = findArticle(articleId);
-
     deleteArticleTags(articleId);
+
     final int deleteRows = boardMapper.deleteArticle(articleId);
+    if (deleteRows == 0) {
+      throw new NotModifiedDataException();
+    }
 
     final ReqSendMail reqSendMail = ReqSendMail.createDeleteArticleDto(findArticle.getSubject());
     mailService.sendMail(reqSendMail);
