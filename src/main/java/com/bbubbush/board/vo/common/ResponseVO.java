@@ -16,28 +16,28 @@ public class ResponseVO<T> {
   private T data;
 
   protected static <T> ResponseVO createSuccessVO(T data) {
-    return of(ApiResponseType.SUCCESS, data);
+    return of(ApiResponseType.SUCCESS.getCode(), ApiResponseType.SUCCESS.getMessage(), data);
   }
 
-  protected static <T> ResponseVO createFailVO() {
-    return createFailVO(ApiResponseType.SERVER_ERROR);
-  }
-
-  protected static <T> ResponseVO createFailVO(ApiResponseType responseType) {
+  protected static ResponseVO createErrorVO(ApiResponseType responseType) {
     if (ApiResponseType.SUCCESS.equals(responseType)) {
       return of(ApiResponseType.SERVER_ERROR);
     }
     return of(responseType);
   }
 
-  public static <T> ResponseVO of(ApiResponseType responseType) {
-    return of(responseType, null);
+  protected static ResponseVO of(ApiResponseType responseType) {
+    return of(responseType.getCode(), responseType.getMessage(), null);
   }
 
-  public static <T> ResponseVO of(ApiResponseType responseType, T data) {
+  protected static ResponseVO of(int code, String message) {
+    return of(code, message, null);
+  }
+
+  protected static <T> ResponseVO of(int code, String message, T data) {
     return ResponseVO.builder()
-      .errorCode(responseType.getCode())
-      .errorMsg(responseType.getMessage())
+      .errorCode(code)
+      .errorMsg(message)
       .data(data)
       .build();
   }

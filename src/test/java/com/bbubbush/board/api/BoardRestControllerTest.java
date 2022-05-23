@@ -1,11 +1,13 @@
 package com.bbubbush.board.api;
 
+import com.bbubbush.board.dto.common.ReqSendMail;
 import com.bbubbush.board.dto.req.ReqDeleteArticle;
 import com.bbubbush.board.dto.req.ReqInsertArticle;
 import com.bbubbush.board.dto.req.ReqSearchArticle;
 import com.bbubbush.board.dto.req.ReqUpdateArticle;
 import com.bbubbush.board.dto.res.ResSearchArticle;
 import com.bbubbush.board.service.BoardService;
+import com.bbubbush.board.service.MailService;
 import com.bbubbush.board.vo.common.ResponseVO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +28,8 @@ import java.util.List;
 
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -42,6 +46,8 @@ class BoardRestControllerTest {
   private ObjectMapper objectMapper;
   @MockBean
   private BoardService boardService;
+  @MockBean
+  private MailService mailService;
   private MockMvc mockMvc;
   private final String EXPECTED_CONTENT_TYPE = MimeTypeUtils.APPLICATION_JSON_VALUE + ";charset=UTF-8";
 
@@ -62,6 +68,7 @@ class BoardRestControllerTest {
     final ResSearchArticle responseArticle = createArticle();
     final ResponseVO<Object> responseVo = createResponseVo(responseArticle);
     given(boardService.findArticle(reqSearchArticle.getId())).willReturn(responseArticle);
+    doNothing().when(mailService).sendMail(creatReqSendMail());
 
     // when
 
@@ -82,6 +89,7 @@ class BoardRestControllerTest {
     final List<ResSearchArticle> responseArticles = createArticles();
     final ResponseVO<Object> responseVo = createResponseVo(responseArticles);
     given(boardService.findArticles()).willReturn(responseArticles);
+    doNothing().when(mailService).sendMail(creatReqSendMail());
 
     // when
 
@@ -102,6 +110,7 @@ class BoardRestControllerTest {
     final int expectedInsertRows = 1;
     final ResponseVO<Object> responseVo = createResponseVo(expectedInsertRows);
     given(boardService.insertArticle(any())).willReturn(expectedInsertRows);
+    doNothing().when(mailService).sendMail(creatReqSendMail());
 
     // when
 
@@ -123,6 +132,7 @@ class BoardRestControllerTest {
     final int expectedInsertRows = 1;
     final ResponseVO<Object> responseVo = createResponseVo(expectedInsertRows);
     given(boardService.updateArticle(any())).willReturn(expectedInsertRows);
+    doNothing().when(mailService).sendMail(creatReqSendMail());
 
     // when
 
@@ -144,6 +154,7 @@ class BoardRestControllerTest {
     final int expectedInsertRows = 1;
     final ResponseVO<Object> responseVo = createResponseVo(expectedInsertRows);
     given(boardService.deleteArticle(any())).willReturn(expectedInsertRows);
+    doNothing().when(mailService).sendMail(creatReqSendMail());
 
     // when
 
@@ -193,10 +204,12 @@ class BoardRestControllerTest {
   }
 
   private <T> ResponseVO<Object> createResponseVo(T data) {
-    ResponseVO<Object> responseVO = new ResponseVO<>();
-    responseVO.setErrorCode(200);
-    responseVO.setData(data);
-    return responseVO;
+    return ResponseVO
+      .builder()
+      .errorCode(200)
+      .errorMsg("")
+      .data(data)
+      .build();
   }
 
   private ResSearchArticle createArticle() {
@@ -215,6 +228,15 @@ class BoardRestControllerTest {
     return new ArrayList<>(){{
       add(createArticle());
     }};
+  }
+
+  private ReqSendMail creatReqSendMail() {
+    return ReqSendMail.builder()
+      .from("upskilling@bbubbush.com")
+      .to("upskilling@bbubbush.com")
+      .subject("Hello world")
+      .text("sample mail")
+      .build();
   }
 
 }

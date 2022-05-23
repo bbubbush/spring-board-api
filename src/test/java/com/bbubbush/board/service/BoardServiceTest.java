@@ -4,24 +4,19 @@ import com.bbubbush.board.dto.req.ReqInsertArticle;
 import com.bbubbush.board.dto.req.ReqUpdateArticle;
 import com.bbubbush.board.dto.res.ResSearchArticle;
 import com.bbubbush.board.mapper.BoardMapper;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,6 +27,8 @@ class BoardServiceTest {
   private BoardService boardService;
   @Mock
   private BoardMapper boardMapper;
+  @Mock
+  private MailService mailService;
 
 
   @Test
@@ -125,9 +122,11 @@ class BoardServiceTest {
   @DisplayName("게시글삭제_성공")
   void deleteArticle() {
     // given
-    final Long expectedId = 4L;
+    final Long expectedId = 11L;
+    given(boardMapper.findArticle(expectedId)).willReturn(createSearchArticle());
     given(boardMapper.deleteArticleTags(expectedId)).willReturn(3);
     given(boardMapper.deleteArticle(expectedId)).willReturn(1);
+    doNothing().when(mailService).sendMail(any());
 
     // when
     final int deleteRows = boardService.deleteArticle(expectedId);

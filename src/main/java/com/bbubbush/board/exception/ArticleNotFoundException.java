@@ -9,7 +9,7 @@ public class ArticleNotFoundException extends CommonApiException {
   }
 
   public ArticleNotFoundException(String addMessage) {
-    super(ApiResponseType.ARTICLE_NOT_FOUND.getMessage() + ", " + addMessage);
+    super(ApiResponseType.ARTICLE_NOT_FOUND.getMessage() + " " + addMessage);
   }
 
 }

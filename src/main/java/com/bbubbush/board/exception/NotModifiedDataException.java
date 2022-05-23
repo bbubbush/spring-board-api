@@ -9,7 +9,7 @@ public class NotModifiedDataException extends CommonApiException {
   }
 
   public NotModifiedDataException(String addMessage) {
-    super(ApiResponseType.NOT_MODIFIED_DATA.getMessage() + ", " + addMessage);
+    super(ApiResponseType.NOT_MODIFIED_DATA.getMessage() + " " + addMessage);
   }
 
 }
