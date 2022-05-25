@@ -5,14 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArticleTagVO {
+public class BoardTagVO {
 
   private Long articleId;
   private String name;
+  private String writer;
 
 }

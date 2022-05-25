@@ -4,6 +4,7 @@ import com.bbubbush.board.dto.req.ReqInsertArticle;
 import com.bbubbush.board.dto.req.ReqUpdateArticle;
 import com.bbubbush.board.dto.res.ResSearchArticle;
 import com.bbubbush.board.mapper.BoardMapper;
+import com.bbubbush.board.mapper.BoardTagMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +29,8 @@ class BoardServiceTest {
   @Mock
   private BoardMapper boardMapper;
   @Mock
+  private BoardTagMapper boardTagMapper;
+  @Mock
   private MailService mailService;
 
 
@@ -36,8 +39,8 @@ class BoardServiceTest {
   void findArticle() {
     // given
     final Long expectedId = 4L;
-    given(boardMapper.findArticle(expectedId)).willReturn(createSearchArticle());
-    given(boardMapper.findArticleTags(any())).willReturn(createTagNames());
+    given(boardMapper.findArticle(any())).willReturn(createSearchArticle());
+    given(boardTagMapper.findArticleTags(any())).willReturn(createTagNames());
 
     // when
     final ResSearchArticle findArticle = boardService.findArticle(expectedId);
@@ -74,8 +77,8 @@ class BoardServiceTest {
   @Test
   @DisplayName("게시글 목록 조회")
   void findArticles() {
-    given(boardMapper.findArticles()).willReturn(createSearchArticles());
-    given(boardMapper.findArticleTags(any())).willReturn(createTagNames());
+    given(boardMapper.findArticles(any())).willReturn(createSearchArticles());
+    given(boardTagMapper.findArticleTags(any())).willReturn(createTagNames());
 
     // when
     final List<ResSearchArticle> findArticles = boardService.findArticles();
@@ -91,8 +94,8 @@ class BoardServiceTest {
   void insertArticle() {
     // given
     final ReqInsertArticle reqInsertArticle = createReqInsertArticle();
-    given(boardMapper.insertArticle(reqInsertArticle)).willReturn(1);
-    given(boardMapper.insertArticleTags(reqInsertArticle)).willReturn(3);
+    given(boardMapper.insertArticle(any())).willReturn(1);
+    given(boardTagMapper.insertArticleTags(any())).willReturn(3);
 
     // when
     final int updateRows = boardService.insertArticle(reqInsertArticle);
@@ -105,11 +108,10 @@ class BoardServiceTest {
   @DisplayName("게시글변경_성공")
   void updateArticle() {
     // given
-    final Long expectedId = 4L;
     final ReqUpdateArticle reqUpdateArticle = createReqUpdateArticle();
-    given(boardMapper.deleteArticleTags(expectedId)).willReturn(3);
-    given(boardMapper.updateArticle(reqUpdateArticle)).willReturn(1);
-    given(boardMapper.insertArticleTags(reqUpdateArticle)).willReturn(3);
+    given(boardTagMapper.deleteArticleTags(any())).willReturn(3);
+    given(boardMapper.updateArticle(any())).willReturn(1);
+    given(boardTagMapper.insertArticleTags(any())).willReturn(3);
 
     // when
     final int updateRows = boardService.updateArticle(reqUpdateArticle);
@@ -123,9 +125,9 @@ class BoardServiceTest {
   void deleteArticle() {
     // given
     final Long expectedId = 11L;
-    given(boardMapper.findArticle(expectedId)).willReturn(createSearchArticle());
-    given(boardMapper.deleteArticleTags(expectedId)).willReturn(3);
-    given(boardMapper.deleteArticle(expectedId)).willReturn(1);
+    given(boardMapper.findArticle(any())).willReturn(createSearchArticle());
+    given(boardTagMapper.deleteArticleTags(any())).willReturn(3);
+    given(boardMapper.deleteArticle(any())).willReturn(1);
     doNothing().when(mailService).sendMail(any());
 
     // when

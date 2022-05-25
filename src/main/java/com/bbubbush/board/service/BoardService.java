@@ -7,11 +7,15 @@ import com.bbubbush.board.dto.res.ResSearchArticle;
 import com.bbubbush.board.exception.ArticleNotFoundException;
 import com.bbubbush.board.exception.NotModifiedDataException;
 import com.bbubbush.board.mapper.BoardMapper;
+import com.bbubbush.board.mapper.BoardTagMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static com.bbubbush.board.entity.NoticeBoardSqlSupport.*;
+import static com.bbubbush.board.entity.NoticeBoardTagSqlSupport.*;
 
 @Service
 @RequiredArgsConstructor
@@ -19,11 +23,12 @@ import java.util.List;
 public class BoardService {
 
   private final BoardMapper boardMapper;
+  private final BoardTagMapper boardTagMapper;
   private final MailService mailService;
 
   @Transactional(readOnly = true)
   public ResSearchArticle findArticle(Long articleId) {
-    final ResSearchArticle findArticle = boardMapper.findArticle(articleId);
+    final ResSearchArticle findArticle = boardMapper.findArticle(findArticleProvider(articleId));
     if (findArticle == null) {
       throw new ArticleNotFoundException();
     }
@@ -33,19 +38,19 @@ public class BoardService {
 
   @Transactional(readOnly = true)
   public List<ResSearchArticle> findArticles() {
-    return boardMapper.findArticles()
+    return boardMapper.findArticles(findArticlesProvider())
       .stream()
       .map(this::findArticleTagById)
       .toList();
   }
 
   public int insertArticle(ReqInsertArticle reqInsertArticle) {
-    final int insertRows = boardMapper.insertArticle(reqInsertArticle);
+    final int insertRows = boardMapper.insertArticle(insertArticleProvider(reqInsertArticle));
     if (insertRows == 0) {
       throw new NotModifiedDataException();
     }
 
-    boardMapper.insertArticleTags(reqInsertArticle);
+    boardTagMapper.insertArticleTags(insertArticleTagsProvider(reqInsertArticle));
     return insertRows;
   }
 
@@ -53,12 +58,12 @@ public class BoardService {
     reqUpdateArticle.setUpdateArticleId();
     deleteArticleTags(reqUpdateArticle.getId());
 
-    final int updateRows = boardMapper.updateArticle(reqUpdateArticle);
+    final int updateRows = boardMapper.updateArticle(updateArticleProvider(reqUpdateArticle));
     if (updateRows == 0) {
       throw new NotModifiedDataException();
     }
 
-    boardMapper.insertArticleTags(reqUpdateArticle);
+    boardTagMapper.insertArticleTags(insertArticleTagsProvider(reqUpdateArticle));
     return updateRows;
   }
 
@@ -66,7 +71,7 @@ public class BoardService {
     final ResSearchArticle findArticle = findArticle(articleId);
     deleteArticleTags(articleId);
 
-    final int deleteRows = boardMapper.deleteArticle(articleId);
+    final int deleteRows = boardMapper.deleteArticle(deleteArticleProvider(articleId));
     if (deleteRows == 0) {
       throw new NotModifiedDataException();
     }
@@ -77,13 +82,13 @@ public class BoardService {
   }
 
   private ResSearchArticle findArticleTagById(ResSearchArticle findArticle) {
-    final List<String> articleTags = boardMapper.findArticleTags(findArticle.getArticleId());
+    final List<String> articleTags = boardTagMapper.findArticleTags(findArticleTagsProvider(findArticle.getArticleId()));
     findArticle.setTag(articleTags);
     return findArticle;
   }
 
   private void deleteArticleTags(Long articleId) {
-    boardMapper.deleteArticleTags(articleId);
+    boardTagMapper.deleteArticleTags(deleteArticleTagsProvider(articleId));
   }
 
 }

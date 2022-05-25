@@ -1,5 +1,6 @@
 package com.bbubbush.board.dto.req;
 
+import com.bbubbush.board.vo.board.BoardTagVO;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,8 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Getter @Setter
 @NoArgsConstructor
@@ -22,12 +25,10 @@ public class ReqInsertArticle {
 
   private Long targetArticleId;
 
-//  @Builder
-//  private ReqInsertArticle(String subject, String text, String writer, List<String> tags, Long targetArticleId) {
-//    this.subject = subject;
-//    this.text = text;
-//    this.writer = writer;
-//    this.tags = tags;
-//    this.targetArticleId = targetArticleId;
-//  }
+  public List<BoardTagVO> converBoardTagVO() {
+    return tags.stream().map(tag -> new BoardTagVO(targetArticleId, tag, writer))
+      .collect(Collectors.toList());
+
+  }
+
 }

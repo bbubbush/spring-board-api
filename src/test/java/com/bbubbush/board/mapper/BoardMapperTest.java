@@ -1,6 +1,7 @@
 package com.bbubbush.board.mapper;
 
 import com.bbubbush.board.dto.req.ReqInsertArticle;
+import com.bbubbush.board.dto.req.ReqSearchArticle;
 import com.bbubbush.board.dto.req.ReqUpdateArticle;
 import com.bbubbush.board.dto.res.ResSearchArticle;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +14,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.bbubbush.board.entity.NoticeBoardSqlSupport.*;
+import static com.bbubbush.board.entity.NoticeBoardTagSqlSupport.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -22,6 +25,8 @@ class BoardMapperTest {
 
   @Autowired
   private BoardMapper boardMapper;
+  @Autowired
+  private BoardTagMapper boardTagMapper;
 
   private final Long EXPECTED_ID = 1L;
 
@@ -31,7 +36,7 @@ class BoardMapperTest {
     // given
 
     // when
-    final ResSearchArticle findArticle = boardMapper.findArticle(EXPECTED_ID);
+    final ResSearchArticle findArticle = boardMapper.findArticle(findArticleProvider(EXPECTED_ID));
 
     // then
     assertThat(findArticle).isNotNull();
@@ -67,7 +72,7 @@ class BoardMapperTest {
     // given
 
     // when
-    final List<ResSearchArticle> findArticles = boardMapper.findArticles();
+    final List<ResSearchArticle> findArticles = boardMapper.findArticles(findArticlesProvider());
 
     // then
     assertThat(findArticles)
@@ -85,7 +90,7 @@ class BoardMapperTest {
     final ReqInsertArticle reqInsertArticle = createReqInsertArticle();
 
     // when
-    final int insertRows = boardMapper.insertArticle(reqInsertArticle);
+    final int insertRows = boardMapper.insertArticle(insertArticleProvider(reqInsertArticle));
 
     // then
     assertThat(insertRows).isEqualTo(1);
@@ -98,7 +103,7 @@ class BoardMapperTest {
     final ReqUpdateArticle reqUpdateArticle = createReqUpdateArticle();
 
     // when
-    final int updateRows = boardMapper.updateArticle(reqUpdateArticle);
+    final int updateRows = boardMapper.updateArticle(updateArticleProvider(reqUpdateArticle));
 
     // then
     assertThat(updateRows).isEqualTo(1);
@@ -108,10 +113,10 @@ class BoardMapperTest {
   @DisplayName("게시글삭제_성공")
   void deleteArticle() {
     // given
-    boardMapper.deleteArticleTags(EXPECTED_ID);
+    boardTagMapper.deleteArticleTags(deleteArticleTagsProvider(EXPECTED_ID));
 
     // when
-    final int deleteRows = boardMapper.deleteArticle(EXPECTED_ID);
+    final int deleteRows = boardMapper.deleteArticle(deleteArticleProvider(EXPECTED_ID));
 
     // then
     assertThat(deleteRows).isEqualTo(1);
@@ -124,7 +129,7 @@ class BoardMapperTest {
     final List<String> expectedTagNames = createReqTags();
 
     // when
-    final List<String> findTags = boardMapper.findArticleTags(EXPECTED_ID);
+    final List<String> findTags = boardTagMapper.findArticleTags(findArticleTagsProvider(EXPECTED_ID));
 
     // then
     assertThat(findTags)
@@ -140,7 +145,7 @@ class BoardMapperTest {
     final ReqInsertArticle reqInsertArticle = createReqInsertArticle();
 
     // when
-    final int insertRows = boardMapper.insertArticleTags(reqInsertArticle);
+    final int insertRows = boardTagMapper.insertArticleTags(insertArticleTagsProvider(reqInsertArticle));
 
     // then
     assertThat(insertRows).isEqualTo(3);
@@ -152,11 +157,32 @@ class BoardMapperTest {
     // given
 
     // when
-    final int deleteRows = boardMapper.deleteArticleTags(EXPECTED_ID);
+    final int deleteRows = boardTagMapper.deleteArticleTags(deleteArticleTagsProvider(EXPECTED_ID));
 
     // then
     assertThat(deleteRows).isEqualTo(3);
   }
+
+  @Test
+  @DisplayName("마이바티스3 동적 sql 테스트")
+  void selectNoticeByMybatis3() {
+    // given
+    final ReqSearchArticle reqSearchArticle = new ReqSearchArticle(1L);
+
+    // when
+    final ResSearchArticle findArticle = boardMapper.findArticle(findArticleProvider(reqSearchArticle.getId()));
+
+    // then
+    assertThat(findArticle).isNotNull();
+    assertThat(findArticle.getText())
+      .isNotNull()
+      .hasSizeGreaterThan(0);
+    assertThat(findArticle.getCreatedDate())
+      .isNotNull()
+      .isBefore(LocalDateTime.now());
+  }
+
+
 
   private List<String> createReqTags() {
     return new ArrayList<>(){{
