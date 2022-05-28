@@ -27,6 +27,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation:'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
     implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'
+    implementation "io.springfox:springfox-boot-starter:3.0.0"
     compileOnly 'org.projectlombok:lombok'
     compileOnly 'org.mybatis.dynamic-sql:mybatis-dynamic-sql:1.4.0'
     runtimeOnly 'mysql:mysql-connector-java'
