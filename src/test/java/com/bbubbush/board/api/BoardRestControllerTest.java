@@ -76,7 +76,7 @@ class BoardRestControllerTest {
     this.mockMvc.perform(
       get(BASE_ENDPOINT + "/one")
         .contentType(MimeTypeUtils.APPLICATION_JSON_VALUE)
-        .content(objectMapper.writeValueAsString(reqSearchArticle)))
+        .param("id", "1"))
       .andDo(print())
       .andExpect(content().contentType(EXPECTED_CONTENT_TYPE))
       .andExpect(content().string(objectMapper.writeValueAsString(responseVo)))

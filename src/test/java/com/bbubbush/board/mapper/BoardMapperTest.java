@@ -134,7 +134,7 @@ class BoardMapperTest {
     // then
     assertThat(findTags)
       .isNotNull()
-      .hasSize(3)
+      .hasSize(1)
       .isEqualTo(expectedTagNames);
   }
 
@@ -148,7 +148,7 @@ class BoardMapperTest {
     final int insertRows = boardTagMapper.insertArticleTags(insertArticleTagsProvider(reqInsertArticle));
 
     // then
-    assertThat(insertRows).isEqualTo(3);
+    assertThat(insertRows).isEqualTo(1);
   }
 
   @Test
@@ -160,7 +160,7 @@ class BoardMapperTest {
     final int deleteRows = boardTagMapper.deleteArticleTags(deleteArticleTagsProvider(EXPECTED_ID));
 
     // then
-    assertThat(deleteRows).isEqualTo(3);
+    assertThat(deleteRows).isEqualTo(1);
   }
 
   @Test
@@ -186,8 +186,6 @@ class BoardMapperTest {
 
   private List<String> createReqTags() {
     return new ArrayList<>(){{
-      add("Spring");
-      add("Java");
       add("Docker");
     }};
   }
