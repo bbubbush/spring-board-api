@@ -9,6 +9,7 @@ import org.mybatis.dynamic.sql.insert.render.InsertStatementProvider;
 import org.mybatis.dynamic.sql.render.RenderingStrategies;
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider;
 import org.mybatis.dynamic.sql.update.render.UpdateStatementProvider;
+import org.springframework.util.StringUtils;
 
 import java.sql.JDBCType;
 import java.sql.Timestamp;
@@ -58,6 +59,9 @@ public class NoticeBoardSqlSupport  {
   }
 
   public static InsertStatementProvider<ReqInsertArticle> insertArticleProvider(ReqInsertArticle reqInsertArticle) {
+    if (!StringUtils.hasText(reqInsertArticle.getWriter())) {
+      reqInsertArticle.setWriter("SangHoon");
+    }
     return insert(reqInsertArticle)
       .into(noticeBoard)
       .map(subject).toProperty("subject")

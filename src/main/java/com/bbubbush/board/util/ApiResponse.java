@@ -1,6 +1,6 @@
 package com.bbubbush.board.util;
 
-import com.bbubbush.board.type.ApiResponseType;
+import com.bbubbush.board.type.ApiResponseErrorType;
 import com.bbubbush.board.vo.common.ResponseVO;
 
 public class ApiResponse<T> extends ResponseVO<T> {
@@ -9,7 +9,7 @@ public class ApiResponse<T> extends ResponseVO<T> {
     return ResponseVO.createSuccessVO(data);
   }
 
-  public static ResponseVO error(ApiResponseType responseType) {
+  public static ResponseVO error(ApiResponseErrorType responseType) {
     return ResponseVO.createErrorVO(responseType);
   }
 

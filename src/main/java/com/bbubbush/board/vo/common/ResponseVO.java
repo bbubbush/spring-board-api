@@ -1,6 +1,6 @@
 package com.bbubbush.board.vo.common;
 
-import com.bbubbush.board.type.ApiResponseType;
+import com.bbubbush.board.type.ApiResponseErrorType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,17 +16,17 @@ public class ResponseVO<T> {
   private T data;
 
   protected static <T> ResponseVO createSuccessVO(T data) {
-    return of(ApiResponseType.SUCCESS.getCode(), ApiResponseType.SUCCESS.getMessage(), data);
+    return of(ApiResponseErrorType.SUCCESS.getCode(), ApiResponseErrorType.SUCCESS.getMessage(), data);
   }
 
-  protected static ResponseVO createErrorVO(ApiResponseType responseType) {
-    if (ApiResponseType.SUCCESS.equals(responseType)) {
-      return of(ApiResponseType.SERVER_ERROR);
+  protected static ResponseVO createErrorVO(ApiResponseErrorType responseType) {
+    if (ApiResponseErrorType.SUCCESS.equals(responseType)) {
+      return of(ApiResponseErrorType.SERVER_ERROR);
     }
     return of(responseType);
   }
 
-  protected static ResponseVO of(ApiResponseType responseType) {
+  protected static ResponseVO of(ApiResponseErrorType responseType) {
     return of(responseType.getCode(), responseType.getMessage(), null);
   }
 

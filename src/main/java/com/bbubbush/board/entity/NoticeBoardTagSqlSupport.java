@@ -41,7 +41,7 @@ public class NoticeBoardTagSqlSupport {
   }
 
   public static MultiRowInsertStatementProvider<BoardTagVO> insertArticleTagsProvider(ReqInsertArticle reqInsertArticle) {
-    return insertMultiple(reqInsertArticle.converBoardTagVO())
+    return insertMultiple(reqInsertArticle.convertBoardTagVO())
       .into(noticeBoardTag)
       .map(articleId).toProperty("articleId")
       .map(name).toProperty("name")
