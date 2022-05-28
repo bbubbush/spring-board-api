@@ -8,7 +8,6 @@ import com.bbubbush.board.util.ApiResponse;
 import com.bbubbush.board.vo.common.ResponseVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -34,17 +33,17 @@ public class ApiExceptionHandler {
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseVO methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e) {
-    final ObjectError objectError = e.getBindingResult()
+    final FieldError fieldError = e.getBindingResult()
       .getAllErrors()
       .stream()
       .findFirst()
-      .orElse(new ObjectError("Error", "SERVER_ERROR"));
+      .map(error -> (FieldError)error)
+      .orElse(new FieldError("Field", "", "SERVER_ERROR"));
 
-    assert objectError instanceof FieldError;
-    final String fieldName = ((FieldError) objectError).getField();
-    final String errorName = objectError.getDefaultMessage();
+    final String fieldName = fieldError.getField();
+    final String errorName = fieldError.getDefaultMessage();
     final ApiResponseErrorType errorType = ApiResponseErrorType.valueOf(errorName);
-    final String maxValue = getMaxValueInSizeAnno(errorType, objectError.getArguments());
+    final String maxValue = getMaxValueInSizeAnno(errorType, fieldError.getArguments());
     return responseAndLoggingError(errorType, errorType.getMessage(fieldName, maxValue), e.getClass().getSimpleName());
   }
 
