@@ -7,6 +7,7 @@ import com.bbubbush.board.type.ApiResponseErrorType;
 import com.bbubbush.board.util.ApiResponse;
 import com.bbubbush.board.vo.common.ResponseVO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -31,8 +32,8 @@ public class ApiExceptionHandler {
     return responseAndLoggingError(ApiResponseErrorType.SERVER_ERROR, e);
   }
 
-  @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseVO methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e) {
+  @ExceptionHandler(value = {MethodArgumentNotValidException.class, BindException.class})
+  public ResponseVO bindExceptionHandler(BindException e) {
     final FieldError fieldError = e.getBindingResult()
       .getAllErrors()
       .stream()
@@ -43,7 +44,7 @@ public class ApiExceptionHandler {
     final String fieldName = fieldError.getField();
     final String errorName = fieldError.getDefaultMessage();
     final ApiResponseErrorType errorType = ApiResponseErrorType.valueOf(errorName);
-    final String maxValue = getMaxValueInSizeAnno(errorType, fieldError.getArguments());
+    final String maxValue = getMaxValueInSizeAnnotation(errorType, fieldError.getArguments());
     return responseAndLoggingError(errorType, errorType.getMessage(fieldName, maxValue), e.getClass().getSimpleName());
   }
 
@@ -61,8 +62,11 @@ public class ApiExceptionHandler {
     return ApiResponse.error(responseType.getCode(), message);
   }
 
-  private String getMaxValueInSizeAnno(ApiResponseErrorType errorType, Object[] args) {
+  private String getMaxValueInSizeAnnotation(ApiResponseErrorType errorType, Object[] args) {
     if (!(ApiResponseErrorType.TOO_LONG_TEXT.equals(errorType) || ApiResponseErrorType.TOO_MANY_COLLECTION.equals(errorType))) {
+      return "";
+    }
+    if (args.length < 2) {
       return "";
     }
     return args[1].toString();

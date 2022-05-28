@@ -7,6 +7,8 @@ import com.bbubbush.board.dto.req.ReqUpdateArticle;
 import com.bbubbush.board.service.BoardService;
 import com.bbubbush.board.util.ApiResponse;
 import com.bbubbush.board.vo.common.ResponseVO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +22,8 @@ public class BoardRestController {
   private final BoardService boardService;
 
   @GetMapping("/one")
-  public ResponseVO findArticle(@Valid @RequestBody ReqSearchArticle reqSearchArticle) {
+  @ApiOperation(value = "게시물 단건 조회", notes = "게시물 ID를 통해 조회합니다.")
+  public ResponseVO findArticle(@Valid ReqSearchArticle reqSearchArticle) {
     return ApiResponse.success(boardService.findArticle(reqSearchArticle.getId()));
   }
 

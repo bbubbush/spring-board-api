@@ -11,8 +11,8 @@ public enum ApiResponseErrorType {
   , NOT_MODIFIED_DATA(522, "변경된 데이터가 없습니다.")
   , SERVER_ERROR(500, "알 수 없는 오류가 발생했습니다. 관리자에게 문의하세요.");
 
-  private Integer code;
-  private String message;
+  private final Integer code;
+  private final String message;
 
   ApiResponseErrorType(Integer code, String message) {
     this.code = code;
@@ -28,7 +28,7 @@ public enum ApiResponseErrorType {
   }
 
   public String getMessage(String... target) {
-    return message.formatted((Object) target);
+    return message.formatted(target);
   }
 
 }
