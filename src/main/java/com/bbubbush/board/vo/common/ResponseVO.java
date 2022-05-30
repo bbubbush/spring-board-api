@@ -1,6 +1,7 @@
 package com.bbubbush.board.vo.common;
 
 import com.bbubbush.board.type.ApiResponseErrorType;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,8 +12,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ResponseVO<T> {
 
+  @ApiModelProperty(value = "오류코드", example = "정상: 200, 오류: 그 외")
   private Integer errorCode;
+  @ApiModelProperty(value = "오류메세지", example = "정상: \"\", 오류: 오류내용")
   private String errorMsg;
+  @ApiModelProperty(value = "데이터")
   private T data;
 
   protected static <T> ResponseVO createSuccessVO(T data) {

@@ -1,6 +1,6 @@
 package com.bbubbush.board.config;
 
-import com.fasterxml.classmate.TypeResolver;
+import com.bbubbush.board.vo.common.ResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -25,52 +25,24 @@ import static java.util.Collections.singletonList;
 @RequiredArgsConstructor
 public class SwaggerConfig {
 
-  private final TypeResolver typeResolver;
-
   @Bean
   public Docket petApi() {
     return new Docket(DocumentationType.SWAGGER_2)
       .select()
-      .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
+      .apis(RequestHandlerSelectors.basePackage("com.bbubbush.board"))
       .paths(PathSelectors.any())
-      .build();
+      .build()
 //      .pathMapping("/")
 //      .directModelSubstitute(LocalDate.class, String.class)
-//      .genericModelSubstitutes(ResponseEntity.class)
-//      .alternateTypeRules(
-//        newRule(typeResolver.resolve(DeferredResult.class,
-//            typeResolver.resolve(ResponseEntity.class, WildcardType.class)),
-//          typeResolver.resolve(WildcardType.class)))
-//      .useDefaultResponseMessages(false)
-//      .globalResponses(HttpMethod.GET,
-//        singletonList(new ResponseBuilder()
-//          .code("500")
-//          .description("500 message")
-//          .representation(MediaType.TEXT_XML)
-//          .apply(r ->
-//            r.model(m ->
-//              m.referenceModel(ref ->
-//                ref.key(k ->
-//                  k.qualifiedModelName(q ->
-//                    q.namespace("some:namespace")
-//                      .name("ERROR"))))))
-//          .build()))
-////      .securitySchemes(singletonList(apiKey()))
-////      .securityContexts(singletonList(securityContext()))
-//      .enableUrlTemplating(true)
-//      .globalRequestParameters(
-//        singletonList(new springfox.documentation.builders.RequestParameterBuilder()
-//          .name("someGlobalParameter")
-//          .description("Description of someGlobalParameter")
-//          .in(ParameterType.QUERY)
-//          .required(true)
-//          .query(q -> q.model(m -> m.scalarModel(ScalarType.STRING)))
-//          .build()))
-//      .tags(new Tag("Pet Service", "All apis relating to pets"));
+      .genericModelSubstitutes(ResponseVO.class)
+      .useDefaultResponseMessages(false)
+      .securitySchemes(singletonList(apiKey()))
+      .securityContexts(singletonList(securityContext()))
+    ;
   }
 
   private ApiKey apiKey() {
-    return new ApiKey("mykey", "api_key", "header");
+    return new ApiKey("basic-user", "Bearer", "header");
   }
 
   private SecurityContext securityContext() {
@@ -85,7 +57,7 @@ public class SwaggerConfig {
     AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
     authorizationScopes[0] = authorizationScope;
     return singletonList(
-      new SecurityReference("mykey", authorizationScopes));
+      new SecurityReference("basic-user", authorizationScopes));
   }
 
   @Bean
