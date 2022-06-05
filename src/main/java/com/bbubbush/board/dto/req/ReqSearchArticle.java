@@ -1,6 +1,6 @@
 package com.bbubbush.board.dto.req;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,10 +11,10 @@ import javax.validation.constraints.Positive;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema
 public class ReqSearchArticle {
 
   @Positive(message = "INVALID_PARAMETER")
-  @ApiModelProperty(value = "게시물 번호", example = "11")
   private long id;
 
 }
