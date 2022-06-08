@@ -1,6 +1,5 @@
 package com.bbubbush.board.annotation;
 
-import com.bbubbush.board.type.ApiResponseErrorType;
 import com.bbubbush.board.validator.DuplicateListValueValidator;
 
 import javax.validation.Constraint;
