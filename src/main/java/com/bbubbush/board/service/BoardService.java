@@ -1,6 +1,7 @@
 package com.bbubbush.board.service;
 
 import com.bbubbush.board.dto.common.ReqSendMail;
+import com.bbubbush.board.dto.req.ReqExcelUploadArticle;
 import com.bbubbush.board.dto.req.ReqInsertArticle;
 import com.bbubbush.board.dto.req.ReqUpdateArticle;
 import com.bbubbush.board.dto.res.ResSearchArticle;
@@ -11,6 +12,7 @@ import com.bbubbush.board.mapper.BoardTagMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -25,6 +27,7 @@ public class BoardService {
   private final BoardMapper boardMapper;
   private final BoardTagMapper boardTagMapper;
   private final MailService mailService;
+  private final ExcelService excelService;
 
   @Transactional(readOnly = true)
   public ResSearchArticle findArticle(Long articleId) {
@@ -80,6 +83,14 @@ public class BoardService {
     mailService.sendMail(reqSendMail);
     return deleteRows;
   }
+
+  public int insertArticleInExcel(ReqExcelUploadArticle reqExcelUploadArticle) {
+    final MultipartFile uploadFile = reqExcelUploadArticle.getUploadFile();
+    final List<ReqInsertArticle> reqInsertArticles = excelService.transformToDto(uploadFile, ReqInsertArticle.class);
+    reqInsertArticles.forEach(this::insertArticle);
+    return 1;
+  }
+
 
   private ResSearchArticle findArticleTagById(ResSearchArticle findArticle) {
     final List<String> articleTags = boardTagMapper.findArticleTags(findArticleTagsProvider(findArticle.getArticleId()));

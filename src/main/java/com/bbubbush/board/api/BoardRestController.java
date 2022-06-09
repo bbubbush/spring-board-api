@@ -1,18 +1,17 @@
 package com.bbubbush.board.api;
 
-import com.bbubbush.board.dto.req.ReqDeleteArticle;
-import com.bbubbush.board.dto.req.ReqInsertArticle;
-import com.bbubbush.board.dto.req.ReqSearchArticle;
-import com.bbubbush.board.dto.req.ReqUpdateArticle;
+import com.bbubbush.board.dto.req.*;
 import com.bbubbush.board.service.BoardService;
 import com.bbubbush.board.util.ApiResponse;
 import com.bbubbush.board.vo.common.ResponseVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
@@ -20,6 +19,7 @@ import javax.validation.Valid;
 @RequestMapping("/board")
 @RequiredArgsConstructor
 @Tag(name = "Board API", description = "게시판 API")
+@Slf4j
 public class BoardRestController {
 
   private final BoardService boardService;
@@ -53,6 +53,20 @@ public class BoardRestController {
   @Operation(summary = "게시물 삭제", description = "게시물정보를 삭제합니다.", tags = "Board API")
   public ResponseVO deleteArticle(@Valid @RequestBody ReqDeleteArticle reqDeleteArticle) {
     return ApiResponse.success(boardService.deleteArticle(reqDeleteArticle.getId()));
+  }
+
+  @PostMapping(value = "/upload/excel", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @Operation(summary = "게시물 등록", description = "게시물을 등록합니다.")
+  public ResponseVO uploadExcel(ReqExcelUploadArticle reqExcelUploadArticle) {
+    final MultipartFile uploadFile = reqExcelUploadArticle.getUploadFile();
+    log.info("uploadFile :: {}", uploadFile.getSize());
+    return ApiResponse.success("success");
+  }
+
+  @GetMapping(value = "/download/excel")
+  @Operation(summary = "게시물 등록", description = "게시물을 등록합니다.")
+  public ResponseVO downloadExcel() {
+    return ApiResponse.success("success");
   }
 
 }

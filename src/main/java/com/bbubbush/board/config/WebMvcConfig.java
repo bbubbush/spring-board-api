@@ -17,4 +17,5 @@ public class WebMvcConfig implements WebMvcConfigurer {
     registry.addInterceptor(preLoggingInterceptor)
       .addPathPatterns("/board/**");
   }
+
 }
