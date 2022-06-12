@@ -1,6 +1,5 @@
 package com.bbubbush.board.dto.req;
 
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +15,6 @@ public class ReqDeleteArticle {
 
   @Positive(message = "INVALID_PARAMETER")
   @Schema(description = "게시물 번호", example = "11")
-  private long id;
+  private Long id;
 
 }

@@ -17,7 +17,7 @@ public class ReqUpdateArticle extends ReqInsertArticle{
 
   @Positive(message = "INVALID_PARAMETER")
   @Schema(description = "게시물 번호", example = "11")
-  private long id;
+  private Long id;
 
   public void setUpdateArticleId() {
     this.setTargetArticleId(id);

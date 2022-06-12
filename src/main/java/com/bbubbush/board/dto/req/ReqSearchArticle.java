@@ -15,6 +15,6 @@ import javax.validation.constraints.Positive;
 public class ReqSearchArticle {
 
   @Positive(message = "INVALID_PARAMETER")
-  private long id;
+  private Long id;
 
 }

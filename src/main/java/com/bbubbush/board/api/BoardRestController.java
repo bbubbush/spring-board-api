@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
@@ -58,9 +57,7 @@ public class BoardRestController {
   @PostMapping(value = "/upload/excel", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @Operation(summary = "게시물 등록", description = "게시물을 등록합니다.")
   public ResponseVO uploadExcel(ReqExcelUploadArticle reqExcelUploadArticle) {
-    final MultipartFile uploadFile = reqExcelUploadArticle.getUploadFile();
-    log.info("uploadFile :: {}", uploadFile.getSize());
-    return ApiResponse.success("success");
+    return ApiResponse.success(boardService.insertArticleInExcel(reqExcelUploadArticle));
   }
 
   @GetMapping(value = "/download/excel")

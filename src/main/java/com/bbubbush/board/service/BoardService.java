@@ -4,12 +4,14 @@ import com.bbubbush.board.dto.common.ReqSendMail;
 import com.bbubbush.board.dto.req.ReqExcelUploadArticle;
 import com.bbubbush.board.dto.req.ReqInsertArticle;
 import com.bbubbush.board.dto.req.ReqUpdateArticle;
+import com.bbubbush.board.dto.res.ResExcelUploadArticle;
 import com.bbubbush.board.dto.res.ResSearchArticle;
 import com.bbubbush.board.exception.ArticleNotFoundException;
 import com.bbubbush.board.exception.NotModifiedDataException;
 import com.bbubbush.board.mapper.BoardMapper;
 import com.bbubbush.board.mapper.BoardTagMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +24,7 @@ import static com.bbubbush.board.entity.NoticeBoardTagSqlSupport.*;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class BoardService {
 
   private final BoardMapper boardMapper;
@@ -84,13 +87,15 @@ public class BoardService {
     return deleteRows;
   }
 
-  public int insertArticleInExcel(ReqExcelUploadArticle reqExcelUploadArticle) {
+  public ResExcelUploadArticle insertArticleInExcel(ReqExcelUploadArticle reqExcelUploadArticle) {
     final MultipartFile uploadFile = reqExcelUploadArticle.getUploadFile();
     final List<ReqInsertArticle> reqInsertArticles = excelService.transformToDto(uploadFile, ReqInsertArticle.class);
     reqInsertArticles.forEach(this::insertArticle);
-    return 1;
+    return ResExcelUploadArticle.builder()
+      .totalInsertRows(reqInsertArticles.size())
+      .successInsertRows(reqInsertArticles.size())
+      .build();
   }
-
 
   private ResSearchArticle findArticleTagById(ResSearchArticle findArticle) {
     final List<String> articleTags = boardTagMapper.findArticleTags(findArticleTagsProvider(findArticle.getArticleId()));

@@ -2,6 +2,7 @@ package com.bbubbush.board.config;
 
 import com.bbubbush.board.exception.ArticleNotFoundException;
 import com.bbubbush.board.exception.CommonApiException;
+import com.bbubbush.board.exception.NotMatchExcelHeaderException;
 import com.bbubbush.board.exception.NotModifiedDataException;
 import com.bbubbush.board.type.ApiResponseErrorType;
 import com.bbubbush.board.util.ApiResponse;
@@ -16,6 +17,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class ApiExceptionHandler {
+
+  @ExceptionHandler(NotMatchExcelHeaderException.class)
+  public ResponseVO notMatchExcelHeaderExceptionHandler(NotMatchExcelHeaderException e) {
+    return responseAndLoggingError(ApiResponseErrorType.NOT_MATCHED_EXCEL_HEADER, e);
+  }
 
   @ExceptionHandler(ArticleNotFoundException.class)
   public ResponseVO articleNotFoundExceptionHandler(ArticleNotFoundException e) {

@@ -9,6 +9,7 @@ public enum ApiResponseErrorType {
   , TOO_MANY_COLLECTION(504, "%s 은(는) %s개 까지 입력할 수 있습니다.")
   , ARTICLE_NOT_FOUND(511, "해당 게시글을 찾을 수 없습니다.")
   , NOT_MODIFIED_DATA(522, "변경된 데이터가 없습니다.")
+  , NOT_MATCHED_EXCEL_HEADER(530, "입력하신 엑셀파일의 헤더 정보가 일치하지 않습니다.")
   , SERVER_ERROR(500, "알 수 없는 오류가 발생했습니다. 관리자에게 문의하세요.");
 
   private final Integer code;
